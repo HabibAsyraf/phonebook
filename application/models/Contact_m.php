@@ -15,7 +15,7 @@ class Contact_m extends CI_Model
 	
 	public function contact_listing()
 	{
-		$query = $this->db->query("SELECT COUNT(id) AS total FROM `phone_contact")->row();
+		$query = $this->db->query("SELECT COUNT(id) AS total FROM `phone_contact`")->row();
 		$data['total_rows'] = $query->total;
 
 		$config['base_url'] = site_url().'/contact/listing/';
@@ -54,20 +54,60 @@ class Contact_m extends CI_Model
 		return $query;
 	}
 	
-	public function create_contact()
+	public function create_contact($data = array())
 	{
-		$datestring = '%Y-%m-%d %H:%i:%s';
 		$time = time();
 		
-		$name = $this->input->post('name');
-		$tel_no = $this->input->post('tel_no'); 
-		$create_date = mdate($datestring, $time);
-		$update_date = $create_date;
+		$db_contact = array(
+			"name" => trim(isset($data['name']) ? $data['name'] : ""),
+			"tel_no" => trim(isset($data['tel_no']) ? $data['tel_no'] : "")
+			"update_date" => trim(date("Y-m-d H:i:s"))
+		);
 		
-		$sql = "INSERT INTO `phone_contact`( `name`, `tel_no`, `create_date`, `update_date` )"
-			."VALUES( ".$this->db->escape($name).",  ".$this->db->escape($tel_no).",  ".$this->db->escape($create_date).",  ".$this->db->escape($update_date)."  )";
+		$update = false;
+		$msg = "";
 		
-	    return $this->db->query($sql);
+		if(isset($data['id']) && trim($data['id']) != "")
+		{
+			$update = true;
+		}
+		
+		if($update === true)
+		{
+		}
+		else
+		{
+			$db_contact['create_date'] = $db_contact['update_date'];
+		}
+		
+		if($msg == "")
+		{
+			if($update === true)
+			{
+				
+			}
+			else
+			{
+				$insert_contact = array();
+				foreach($db_contact as $k => $v)
+				{
+					$insert_contact["`" . $k . "`"] = $this->db->escape($v);
+				}
+				
+				$sql =   "INSERT INTO `phone_contact`( " . implode(", ", array_keys($insert_contact)) . " ) "
+						."VALUES( " . implode(", ", array_values($insert_contact)) . " )";
+				
+				$this->db->query($sql);
+				
+				if($this->db->affected_rows > 0)
+				{
+					return true;
+				}
+			}
+		}
+		
+		
+	    return false;
 	}
 	
 	public function update_contact()

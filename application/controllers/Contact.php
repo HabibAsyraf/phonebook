@@ -43,23 +43,10 @@ class Contact extends CI_Controller
 	
 	public function create()
 	{
-	    $this->load->library('form_validation');
-	    
-	    $this->form_validation->set_rules('name', 'Name', 'required');
-	    $this->form_validation->set_rules('tel_no', 'Tel_No', 'required');
+		$data = $this->input->post();
 		
-		$data['title'] = "Contact";
-		$data['datestring'] = '%d-%F-%Y %g:%i:%a';
-		
-	    if ($this->form_validation->run() === FALSE)
-	    {
-			$this->load->view('contact/error', $data);
-	    }
-	    else
-	    {
-	        $this->contact_model->create_contact();
-	        redirect('contact/listing');
-	    }
+		$this->contact_model->create_contact($data);
+		redirect('contact/listing');
 	}
 	
 	public function update()
