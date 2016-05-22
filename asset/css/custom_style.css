@@ -1,0 +1,16 @@
+body
+{
+	text-align:center;
+	background-color:darkgrey;
+	/*height: 100%;*/
+	padding-top: 70px;
+}
+
+.well
+{
+   /*background-color: rgba(245, 245, 245, 0.4);*/
+}
+.navbar
+{
+   /*background-color: rgba(245, 245, 245, 0.4);*/
+}
