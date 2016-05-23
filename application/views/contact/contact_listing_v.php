@@ -4,7 +4,8 @@
 			<a href="#modalAddContact" data-toggle="modal" class="btn btn-success">Add Contact <span class="glyphicon glyphicon-plus"></span></a>
 		</div>
 		<div class="col-md-6" align="right">
-			<a target="_blank" href="<?php echo site_url('contact/print_listing'); ?>" class="btn btn-primary">Print  <span class="glyphicon glyphicon-print"></span></a>
+			<a target="_blank" href="<?php echo site_url('contact/excel_listing'); ?>" class="btn btn-primary">Export To Excel <span class="glyphicon glyphicon-file"></span></a>
+			<a target="_blank" href="<?php echo site_url('contact/pdf_listing'); ?>" class="btn btn-danger">Export To PDF  <span class="glyphicon glyphicon-print"></span></a>
 		</div>
 		<div class="col-md-6" align="right">
 			&nbsp;
@@ -107,8 +108,7 @@ foreach ($query->result() as $i => $contact_item)
 				<div class="modal-header">
 					<h4 class="modal-title">Update Contact</h4>
 				</div>
-				<?php echo validation_errors(); ?>
-				<?php echo form_open('contact/update'); ?>
+				<form action="<?php echo site_url()?>/contact/create" method="POST" />
 					<input name="id" type="hidden" value="<?php echo $contact_item->id; ?>"/>
 					<div class="modal-body">
 						<fieldset>
@@ -138,7 +138,7 @@ foreach ($query->result() as $i => $contact_item)
 ?>
 <!--End Update Modal-->
 
-<!-- Update Meeting Modal-->
+<!-- Delete Meeting Modal-->
 <?php
 foreach ($query->result() as $i => $contact_item)
 {
@@ -150,20 +150,20 @@ foreach ($query->result() as $i => $contact_item)
 				<div class="modal-header">
 					<h4 class="modal-title">Delete Contact</h4>
 				</div>
-				<?php echo validation_errors(); ?>
-				<?php echo form_open('contact/remove'); ?>
-				<input name="id" type="hidden" value="<?php echo $contact_item->id; ?>"/>
+				
 				<div class="modal-body">
 					<fieldset>
 						<h4>Are you sure?</h4>
 				    </fieldset>
 				</div>
-				<div class="modal-footer"><input type="submit" name="add" value="DELETE" class="form-control btn btn-danger"></div>
-				</form>
+				
+				<div class="modal-footer">
+					<a class="btn btn-danger btn-md" href="<?php echo site_url();?>/contact/remove/<?php echo urlencode(base64_encode($contact_item->id . "###contact/listing")); ?>" title="Delete">DELETE</a>
+				</div>
 			</div>
 		</div>
 	</div>
 	<?php
 }
 ?>
-<!--End Update Modal-->
+<!--End Delete Modal-->

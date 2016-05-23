@@ -56,11 +56,9 @@ class Contact_m extends CI_Model
 	
 	public function create_contact($data = array())
 	{
-		$time = time();
-		
 		$db_contact = array(
 			"name" => trim(isset($data['name']) ? $data['name'] : ""),
-			"tel_no" => trim(isset($data['tel_no']) ? $data['tel_no'] : "")
+			"tel_no" => trim(isset($data['tel_no']) ? $data['tel_no'] : ""),
 			"update_date" => trim(date("Y-m-d H:i:s"))
 		);
 		
@@ -72,10 +70,7 @@ class Contact_m extends CI_Model
 			$update = true;
 		}
 		
-		if($update === true)
-		{
-		}
-		else
+		if($update === false)
 		{
 			$db_contact['create_date'] = $db_contact['update_date'];
 		}
@@ -84,7 +79,21 @@ class Contact_m extends CI_Model
 		{
 			if($update === true)
 			{
+				$update_contact = array();
+				foreach($db_contact as $k => $v)
+				{
+					$update_contact[] = "`" . $k . "` = " . $this->db->escape($v);
+				}
 				
+				$sql =   "UPDATE `phone_contact` SET " . implode(", ", $update_contact) . " "
+						."WHERE `id` = " . $this->db->escape(trim($data['id']));
+				
+				$this->db->query($sql);
+				if($this->db->affected_rows > 0)
+				{
+					$msg = "Contact succesfully updated.";
+					return true;
+				}
 			}
 			else
 			{
@@ -98,41 +107,20 @@ class Contact_m extends CI_Model
 						."VALUES( " . implode(", ", array_values($insert_contact)) . " )";
 				
 				$this->db->query($sql);
-				
 				if($this->db->affected_rows > 0)
 				{
+					$msg = "New contact succesfully inserted.";
 					return true;
 				}
 			}
 		}
 		
-		
+		$msg = "New contact succesfully inserted.";
 	    return false;
 	}
 	
-	public function update_contact()
+	public function remove_contact($id)
 	{
-		$datestring = '%Y-%m-%d %H:%i:%s';
-		$time = time();
-		
-		$id = $this->input->post('id');
-		$name = $this->input->post('name');
-		$tel_no = $this->input->post('tel_no'); 
-		$update_date = mdate($datestring, $time);
-		
-		$sql = "UPDATE `phone_contact` "
-			."SET `name` = ".$this->db->escape($name).", "
-			."`tel_no` = ".$this->db->escape($tel_no).", "
-			."`update_date` = ".$this->db->escape($update_date)." "
-			."WHERE `id` = ".$this->db->escape($id);
-		
-	    return $this->db->query($sql);
-	}
-	
-	public function remove_contact()
-	{
-		$id = $this->input->post('id');
-		
 		$sql = "DELETE FROM `phone_contact` "
 			."WHERE `id` = ".$this->db->escape($id);
 		

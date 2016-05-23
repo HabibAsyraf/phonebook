@@ -1,16 +1,18 @@
 body
 {
 	text-align:center;
-	background-color:darkgrey;
-	/*height: 100%;*/
+	background-image:url("../background/bckgrnd.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 	padding-top: 70px;
 }
 
 .well
 {
-   /*background-color: rgba(245, 245, 245, 0.4);*/
+   background-color: rgba(245, 245, 200, 0.8);
 }
 .navbar
 {
-   /*background-color: rgba(245, 245, 245, 0.4);*/
+   background-color: rgba(245, 245, 200, 0.8);
 }

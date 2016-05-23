@@ -29,9 +29,22 @@ class Contact extends CI_Controller
 	    $this->load->view('templates/footer');
 	}
 	
-	public function print_listing()
+	public function pdf_listing()
 	{
 		$data['query'] = $this->contact_m->contact_print();
+		$data['title'] = "Contact List";
+		
+		$content = $this->load->view('contact/contact_listing_p', $data, true);
+		
+	    $html2pdf = new HTML2PDF('P','A4','fr');
+	    $html2pdf->WriteHTML($content);
+	    $html2pdf->Output('Contact.pdf');
+	}
+	
+	public function excel_listing()
+	{
+		$data['query'] = $this->contact_m->contact_print();
+		$data['content']
 		$data['title'] = "Contact List";
 		
 		$content = $this->load->view('contact/contact_listing_p', $data, true);
@@ -45,49 +58,25 @@ class Contact extends CI_Controller
 	{
 		$data = $this->input->post();
 		
-		$this->contact_model->create_contact($data);
+		$result = $this->contact_m->create_contact($data);
 		redirect('contact/listing');
 	}
 	
-	public function update()
+	public function remove($info="")
 	{
-		$this->load->helper('form');
-	    $this->load->library('form_validation');
-	    
-	    $this->form_validation->set_rules('id', 'ID', 'required');
-	    $this->form_validation->set_rules('name', 'Name', 'required');
-	    $this->form_validation->set_rules('tel_no', 'Tel_No', 'required');
-		
-		$data['title'] = "Contact";
-		$data['datestring'] = '%d-%F-%Y %g:%i:%a';
-		
-	    if ($this->form_validation->run() === FALSE)
-	    {
-			$this->load->view('contact/error', $data);
-	    }
-	    else
-	    {
-	        $this->contact_model->update_contact();
-	        redirect('contact/listing');
-	    }
-	}
-	
-	public function remove()
-	{
-		$this->load->helper('form');
-	    $this->load->library('form_validation');
-	    
-	    $this->form_validation->set_rules('id', 'ID', 'required');
-	    
-	    if ($this->form_validation->run() === FALSE)
-	    {
-			$this->load->view('contact/error', $data);
-	    }
-	    else
-	    {
-	        $this->contact_model->remove_contact();
-	        redirect('contact/listing');
-	    }
+		if($info != "")
+		{
+			//$decrypted_info = array();
+			$decrypted_info = explode("###", base64_decode(urldecode($info)));
+			
+			$this->contact_m->remove_contact($decrypted_info[0]);
+			
+			if(sizeof($decrypted_info) > 1)
+			{
+				redirect($decrypted_info[1]);
+			}
+		}
+		redirect('contact/listing');
 	}
 }
 ?>
