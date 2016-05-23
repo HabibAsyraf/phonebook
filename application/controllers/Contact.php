@@ -44,7 +44,7 @@ class Contact extends CI_Controller
 	public function excel_listing()
 	{
 		$data['query'] = $this->contact_m->contact_print();
-		$data['content']
+// 		$data['content']
 		$data['title'] = "Contact List";
 		
 		$content = $this->load->view('contact/contact_listing_p', $data, true);
