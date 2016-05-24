@@ -49,12 +49,10 @@
 		{
 			?>
 	        <div align="center">
-	        	<div class="well" style="width:90%; height:97%">
-					<h1><?php
-							echo $title;
-						?></h1>
-						<hr>
-						<?php //get_msg(); ?>
+        		<div class="panel panel-success">
+					<div class="panel-heading"><?php echo $title; ?></div>
+						<div class="panel-body">
+							<div style="width: 90%"><?php get_msg(true); ?></div>
 			<?php
 		}
 		?>

@@ -3,7 +3,7 @@ class Contact_m extends CI_Model
 {
 	public function __construct()
 	{
-		$this->load->database();
+		
 	}
 	
 	public function get_contact()
@@ -70,6 +70,16 @@ class Contact_m extends CI_Model
 			$update = true;
 		}
 		
+		if(isset($db_contact['name']) && trim($db_contact['name']) == "")
+		{
+			$msg = "Contact name cannot be empty";
+		}
+		else if(isset($db_contact['tel_no']) && trim($db_contact['tel_no']) == "")
+		{
+			$msg = "Telephone number cannot be empty";
+		}
+		
+		
 		if($update === false)
 		{
 			$db_contact['create_date'] = $db_contact['update_date'];
@@ -89,9 +99,9 @@ class Contact_m extends CI_Model
 						."WHERE `id` = " . $this->db->escape(trim($data['id']));
 				
 				$this->db->query($sql);
-				if($this->db->affected_rows > 0)
+				if($this->db->affected_rows() > 0)
 				{
-					$msg = "Contact succesfully updated.";
+					set_msg("Contact succesfully updated.", "alert-success");
 					return true;
 				}
 			}
@@ -107,15 +117,15 @@ class Contact_m extends CI_Model
 						."VALUES( " . implode(", ", array_values($insert_contact)) . " )";
 				
 				$this->db->query($sql);
-				if($this->db->affected_rows > 0)
+				if($this->db->affected_rows() > 0)
 				{
-					$msg = "New contact succesfully inserted.";
+					set_msg("New contact succesfully inserted.", "alert-success");
 					return true;
 				}
 			}
 		}
 		
-		$msg = "New contact succesfully inserted.";
+		set_msg($msg);
 	    return false;
 	}
 	

@@ -2,18 +2,22 @@
 	<div class="form-group" style="width: 92%">
 		<div class="col-md-6" align="left">
 			<a href="#modalAddContact" data-toggle="modal" class="btn btn-success">Add Contact <span class="glyphicon glyphicon-plus"></span></a>
-		</div>
-		<div class="col-md-6" align="right">
 			<a target="_blank" href="<?php echo site_url('contact/excel_listing'); ?>" class="btn btn-primary">Export To Excel <span class="glyphicon glyphicon-file"></span></a>
 			<a target="_blank" href="<?php echo site_url('contact/pdf_listing'); ?>" class="btn btn-danger">Export To PDF  <span class="glyphicon glyphicon-print"></span></a>
+		</div>
+		<div class="col-md-5">
+			<input type="text" name="search_contact" class="form-control" value="" />
+		</div>
+		<div class="col-md-1">
+			<input type="submit" value="Search" class="form-control btn btn-default" />
 		</div>
 		<div class="col-md-6" align="right">
 			&nbsp;
 		</div>
 	</div>
 	<div class="form-group">
-		<table class="table table-hover" style="background:#FFF; width:90%; font-size:small">
-			<thead style="background: lightgrey;">
+		<table class="table table-hover table-bordered" style="background:#FFF; width:90%; font-size:small">
+			<thead >
 				<th style="width: 1%; text-align:center">No.</th>
 				<th style="text-align:center">Name</th>
 				<th style="width: 15%; text-align:center">Tel No.</th>

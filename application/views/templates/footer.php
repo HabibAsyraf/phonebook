@@ -3,9 +3,10 @@
 			{
 				?>
 				</div>
+				</div>
+		        </div>
 				<?php
 			}
 			?>
-        </div>
     </body>
 </html>

@@ -5,7 +5,7 @@ class Contact extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('contact_m');
-		$this->load->library('html2pdf/html2pdf');
+		//$this->load->library('html2pdf/html2pdf');
 		
 		if(!isset($this->session->userdata['logged_in']))
 		{

@@ -27,8 +27,7 @@ if(!function_exists("get_msg")) {
 		$show = "";
 		if($CI->phpsession->get("sys_msg")) {
 			$show = '
-				<div class="alert ' . ($dismissable === true ? 'alert-dismissable' : '') . ' ' . $CI->phpsession->get("sys_msg_type") . '">' . $CI->phpsession->get("sys_msg") . ($dismissable === true ? '<button class="close" aria-hidden="true" data-dismiss="alert" type="button">x</button>' : '') . '</div>
-			';
+				<div align="left" class="alert ' . ($dismissable === true ? 'alert-dismissable' : '') . ' ' . $CI->phpsession->get("sys_msg_type") . '">' . $CI->phpsession->get("sys_msg") . ($dismissable === true ? '<button class="close" aria-hidden="true" data-dismiss="alert" type="button">x</button>' : '') . '</div>';
 			$CI->phpsession->clear("sys_msg");
 			$CI->phpsession->clear("sys_msg_type");
 		}
