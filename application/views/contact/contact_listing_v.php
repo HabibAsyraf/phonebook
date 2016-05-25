@@ -1,3 +1,4 @@
+<?php $search_data = $this->phpsession->get("search_data"); ?>
 <div align="center" style="width: 100%">
 	<div class="form-group" style="width: 92%">
 		<div class="col-md-6" align="left">
@@ -5,15 +6,17 @@
 			<a target="_blank" href="<?php echo site_url('contact/excel_listing'); ?>" class="btn btn-primary">Export To Excel <span class="glyphicon glyphicon-file"></span></a>
 			<a target="_blank" href="<?php echo site_url('contact/pdf_listing'); ?>" class="btn btn-danger">Export To PDF  <span class="glyphicon glyphicon-print"></span></a>
 		</div>
-		<div class="col-md-5">
-			<input type="text" name="search_contact" class="form-control" value="" />
-		</div>
-		<div class="col-md-1">
-			<input type="submit" value="Search" class="form-control btn btn-default" />
-		</div>
-		<div class="col-md-6" align="right">
-			&nbsp;
-		</div>
+		<form action="<?php echo site_url()?>/contact/search" method="POST">
+			<div class="col-md-5">
+				<input type="text" name="search_contact" class="form-control" value="<?php echo isset($search_data['search_contact']) ? $search_data['search_contact'] : '' ; ?>" />
+			</div>
+			<div class="col-md-1">
+				<input type="submit" value="Search" class="form-control btn btn-default" />
+			</div>
+			<div class="col-md-6" align="right">
+				&nbsp;
+			</div>
+		</form>
 	</div>
 	<div class="form-group">
 		<table class="table table-hover table-bordered" style="background:#FFF; width:90%; font-size:small">
@@ -27,13 +30,14 @@
 			</thead>
 			<tbody>
 				<?php
-				if($total_rows > 0)
+				if($query->num_rows() > 0)
 				{
+					$a=1;
 					foreach ($query->result() as $i => $contact_item)
 					{
 						?>
 						<tr style="text-align:center">
-							<td style="vertical-align:middle"><?php echo $rows_number; ?></td>
+							<td style="vertical-align:middle"><?php echo $a; ?></td>
 					    	<td style="text-align:left; vertical-align:middle"><?php echo $contact_item->name; ?></td>
 							<td style="vertical-align:middle"><?php echo $contact_item->tel_no; ?></td>
 							<td style="vertical-align:middle"><?php echo date("d-F-Y", strtotime($contact_item->create_date)); ?></td>
@@ -51,7 +55,7 @@
 				    		</td>
 						</tr>
 						<?php 
-						$rows_number++;
+						$a++;
 					}
 				}
 				else

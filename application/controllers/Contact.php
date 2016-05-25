@@ -1,15 +1,34 @@
 <?php
 class Contact extends CI_Controller
 {
+	public $data;
+	public $where;
+	public $pag_config;
+	
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('contact_m');
-		//$this->load->library('html2pdf/html2pdf');
 		
 		if(!isset($this->session->userdata['logged_in']))
 		{
 			redirect(base_url());
+		}
+		
+		// handle the pagination setup
+		if(in_array(strtolower($this->uri->segment(2)), array("listing", "search"))) {
+			$this->pag_config["uri_segment"] = 4;
+			$per_page = $this->uri->segment($this->pag_config["uri_segment"] - 1);
+			$this->pag_config["per_page"] = (is_numeric($per_page) && $per_page > 1 ? $per_page : PAGING_DEFAULT_LIMIT);
+			$this->pag_config["base_url"] = site_url() . "/" . $this->uri->segment(1) . "/" . $this->uri->segment(2) . "/" . $this->pag_config["per_page"] . "/";
+			$this->pagination->initialize($this->pag_config); 
+		}
+		
+		// handle the listing search function
+		if(!in_array(strtolower($this->uri->segment(2)), array("pdf_listing", "excel_listing", "create", "remove")))
+		{
+			$search_url = $this->uri->segment(1) . "/" . $this->uri->segment(2);
+			$this->where = $this->contact_m->search($search_url, $this->input->post());
 		}
 	}
 	
@@ -20,12 +39,25 @@ class Contact extends CI_Controller
 	
 	public function listing()
 	{
-		$data = $this->contact_m->contact_listing();
-    	$data['title'] = "Contact";
-		$data['datestring'] = '%d-%F-%Y %g:%i:%a';
+		$this->data["query"] = $this->contact_m->contact_listing($this->pag_config);
+		$this->data["pagination"] = $this->pagination->create_links();
 		
-        $this->load->view('templates/header', $data);
-		$this->load->view('contact/contact_listing_v', $data);
+    	$this->data['title'] = "Contact";
+		
+        $this->load->view('templates/header', $this->data);
+		$this->load->view('contact/contact_listing_v', $this->data);
+	    $this->load->view('templates/footer');
+	}
+	
+	public function search()
+	{
+		$this->data['query'] = $this->contact_m->contact_listing($this->pag_config, $this->where);
+    	$this->data["pagination"] = $this->pagination->create_links();
+		
+    	$this->data['title'] = "Contact";
+		
+        $this->load->view('templates/header', $this->data);
+		$this->load->view('contact/contact_listing_v', $this->data);
 	    $this->load->view('templates/footer');
 	}
 	

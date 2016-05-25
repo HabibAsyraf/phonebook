@@ -1,9 +1,44 @@
 <?php
 class Contact_m extends CI_Model
 {
-	public function __construct()
+	public function __construct(){ }
+	
+	function search($search_url="", $data=array())
 	{
+		if(isset($data) && is_array($data) && sizeof($data) > 0)
+		{
+			$this->phpsession->save("search_url", $search_url);
+			$this->phpsession->save("search_data", $data);
+			redirect($this->uri->uri_string());
+		}
 		
+		if(!isset($data) || !is_array($data) || sizeof($data) == 0)
+		{
+			if($this->phpsession->get("search_url") == $search_url)
+			{
+				$data = $this->phpsession->get("search_data");
+			}
+			else if($this->phpsession->get("search_url") !== false)
+			{
+				$this->phpsession->clear("search_url");
+				$this->phpsession->clear("search_data");
+				$data = array();
+			}
+		} 
+		
+		$this->phpsession->save("search_url", $search_url);
+		$this->phpsession->save("search_data", $data);
+		$where = "";
+		
+		if($data !== false && is_array($data)) {
+			
+			if(isset($data["search_contact"]))
+			{
+				$where .= ($where == "" ? " WHERE " : " AND ") . " `name` LIKE " . $this->db->escape("%" . $data["search_contact"] . "%");
+			}
+		}
+		
+		return $where;
 	}
 	
 	public function get_contact()
@@ -13,38 +48,26 @@ class Contact_m extends CI_Model
 		return $query;
 	}
 	
-	public function contact_listing()
+	public function contact_listing($pag = array(), $where="")
 	{
-		$query = $this->db->query("SELECT COUNT(id) AS total FROM `phone_contact`")->row();
-		$data['total_rows'] = $query->total;
-
-		$config['base_url'] = site_url().'/contact/listing/';
-		$config['uri_segment'] = 3;
-		$config['total_rows'] = $data['total_rows'];
-		$config['per_page'] = PAGING_DEFAULT_LIMIT;
+		$per_page = $pag["per_page"];
+		$cur_page_segment = $pag["uri_segment"];
 		
-		$data['rows_number'] = $this->uri->segment($config['uri_segment']) + 1;
+		$start_form  = $this->uri->segment($cur_page_segment);
+		$limit = " LIMIT " . $per_page;
 		
-		$this->pagination->initialize($config);
-
-		$data['pagination'] = $this->pagination->create_links();
-
-		$sql = '';
-		if($data['total_rows'] > 0)
+		if(is_numeric($start_form) && $start_form > 1)
 		{
-			if($this->uri->segment($config['uri_segment']) && is_numeric($this->uri->segment($config['uri_segment'])))
-			{
-				$sql = ' LIMIT ' . $this->uri->segment($config['uri_segment']) . ', ' . $config['per_page'];
-			}
-			else
-			{
-				$sql = ' LIMIT 0, ' . $config['per_page'];
-			}
+			$limit = " LIMIT " . $start_form . ", " . $per_page;
 		}
 		
-		$data['query'] = $this->db->query("SELECT * FROM `phone_contact` ORDER BY `id` DESC $sql");
+		$sql = "SELECT COUNT(`id`) AS total FROM `phone_contact` " . $where;
+		$pag["total_rows"] = $this->db->query($sql)->row()->total;
+		$this->pagination->initialize($pag);
+		
+		$query = $this->db->query("SELECT * FROM `phone_contact` " . $where . " ORDER BY `id` DESC " . $limit);
 
-		return $data;
+		return $query;
 	}
 	
 	public function contact_print()
