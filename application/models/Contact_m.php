@@ -34,7 +34,7 @@ class Contact_m extends CI_Model
 			
 			if(isset($data["search_contact"]))
 			{
-				$where .= ($where == "" ? " WHERE " : " AND ") . " `name` LIKE " . $this->db->escape("%" . $data["search_contact"] . "%");
+				$where .= ($where == "" ? " WHERE " : " AND ") . " (`name` LIKE " . $this->db->escape("%" . $data["search_contact"] . "%") . " OR `tel_no` LIKE " . $this->db->escape("%" . $data["search_contact"] . "%") . " ) ";
 			}
 		}
 		
