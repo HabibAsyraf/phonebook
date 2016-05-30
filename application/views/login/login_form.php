@@ -1,12 +1,13 @@
 <?php
 $this->load->view('templates/header', $title);
 ?>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
 <div class="modal-dialog" id="div_login">
     <div class="modal-content">
         <form action="verify" method="post" class="form_horizontal">
             <div class="modal-body">
-                <h4>Log In</h4><br/>
+                <h4>Log In</h4>
+                <?php get_msg(true); ?>
                 <div class="form-group">
                     <input type="text" name="username" class="form-control" placeholder="Username">
                 </div>
@@ -23,26 +24,27 @@ $this->load->view('templates/header', $title);
 </div>
 
 <div class="modal-dialog" id="div_register" style="display: none">
-    <div class="modal-content">
-        <form action="register" method="post" class="form_horizontal">
-            <div class="modal-body">
-                <h4>Register</h4><br/>
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control" placeholder="Email Address">
-                </div>
-                <div class="form-group">
-                    <input type="text" name="username" class="form-control" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <input type="password" name="password" class="form-control" placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <input type="submit" name="login" class="form-control btn btn-primary" value="Submit">
+	<div class="modal-content">
+		<form action="register" method="post" class="form_horizontal">
+			<div class="modal-body">
+				<h4>Register</h4>
+				<?php get_msg(true); ?>
+				<div class="form-group">
+					<input type="text" name="name" class="form-control" placeholder="Fullname">
+				</div>
+				<div class="form-group">
+					<input type="text" name="username" class="form-control" placeholder="Username">
+				</div>
+				<div class="form-group">
+					<input type="password" name="password" class="form-control" placeholder="Password">
+				</div>
+				<div class="form-group">
+					<input type="submit" name="login" class="form-control btn btn-primary" value="Submit">
 				</div>
 				<p>Already a member ? <a id="to_login" href="#">Log In</a></p>
 			</div>
-        </form>
-    </div>
+		</form>
+	</div>
 </div>
 
 <script type="text/javascript">

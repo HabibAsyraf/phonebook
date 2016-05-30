@@ -5,6 +5,7 @@ class Login extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('login_m');
+		$this->load->model('user_model');
 	}
 	
 	public function index()
@@ -46,6 +47,29 @@ class Login extends CI_Controller
 		    $data['error'] = "Please fill the blank field";
 		    $this->load->view('login/error', $data);
 	    }
+	}
+	
+	public function register()
+	{
+		if($_POST)
+		{
+			$rs = $this->user_model->register_user();
+			
+			if($rs === false)
+			{
+				redirect('login');
+			}
+			else
+			{
+				set_msg("Registration success", "alert-success");
+				redirect('login');
+			}
+		}
+		else
+		{
+			set_msg('Invalid request. Please try again later');
+			redirect('login');
+		}
 	}
 	
 	public function logout()

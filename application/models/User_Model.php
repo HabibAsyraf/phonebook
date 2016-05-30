@@ -106,6 +106,43 @@ class User_Model extends CI_Model
 	    return $this->db->query($sql);
 	}
 	
+	public function register_user()
+	{
+		$db_user = array(
+			'username' => trim($this->input->post('username')),
+			'password' => trim($this->input->post('password')),
+			'name' => trim($this->input->post('name')),
+			'create_date' => date("Y-m-d H:i:s"),
+			'update_date' => date("Y-m-d H:i:s")
+		);
+		
+		if($db_user['name'] == "")
+		{
+			set_msg("Fullname cannot be empty");
+			return false;
+		}
+		if($db_user['username'] == "")
+		{
+			set_msg("Username cannot be empty");
+			return false;
+		}
+		if($db_user['password'] == "")
+		{
+			set_msg("Password cannot be empty");
+			return false;
+		}
+		if(strlen($db_user['password']) < 3)
+		{
+			set_msg("Minimum length for password is 4 characters");
+			return false;
+		}
+		
+		$db_user['password'] = md5($db_user['password']);
+		$rs = $this->db->insert('phone_user', $db_user);
+		
+		return $rs;
+	}
+	
 	public function update_user()
 	{
 		$datestring = '%Y-%m-%d %H:%i:%s';
