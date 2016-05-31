@@ -73,17 +73,58 @@ class Contact extends CI_Controller
 	    $html2pdf->Output('Contact.pdf');
 	}
 	
+	public function cleanData(&$str)
+	{
+		// escape tab characters
+	    $str = preg_replace("/\t/", "\\t", $str);
+	
+	    // escape new lines
+	    $str = preg_replace("/\r?\n/", "\\n", $str);
+	
+	    // escape fields that include double quotes
+	    if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+	}
+	
 	public function excel_listing()
 	{
 		$data['query'] = $this->contact_m->contact_print();
-// 		$data['content']
-		$data['title'] = "Contact List";
 		
-		$content = $this->load->view('contact/contact_listing_p', $data, true);
-		
-	    $html2pdf = new HTML2PDF('P','A4','fr');
-	    $html2pdf->WriteHTML($content);
-	    $html2pdf->Output('Contact.pdf');
+		if($data['query']->num_rows() > 0)
+		{
+			$excel_data = array();
+			foreach($data['query']->result() as $k => $row)
+			{
+				$excel_data[] = array(
+					'name' => $row->name,
+					'tel_no' => $row->tel_no
+				);
+			}
+			
+			// filename for download
+			$filename = "website_data_" . date('Ymd') . ".csv";
+			
+			header("Content-Disposition: attachment; filename=\"$filename\"");
+			header("Content-Type: text/csv");
+// 			header("Content-Type: application/vnd.ms-excel");
+// 			header("Content-Type: text/plain");
+			$out = fopen("php://output", 'w');
+			$flag = false;
+			foreach($excel_data as $row)
+			{
+				if(!$flag)
+				{
+// 					echo implode("\t", array_keys($row)) . "\r\n";
+					fputcsv($out, array_keys($row), ',', '"');
+					$flag = true;
+				}
+				
+				array_walk($row, array($this, 'cleanData'));
+// 				echo implode("\t", array_values($row)) . "\r\n";
+			    fputcsv($out, array_values($row), ',', '"');
+			}
+			fclose($out);
+			exit;
+		}
 	}
 	
 	public function create()

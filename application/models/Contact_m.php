@@ -72,7 +72,6 @@ class Contact_m extends CI_Model
 	
 	public function contact_print()
 	{
-		
 		$query = $this->db->query("SELECT * FROM `phone_contact` ORDER BY `name` ");
 		return $query;
 	}
