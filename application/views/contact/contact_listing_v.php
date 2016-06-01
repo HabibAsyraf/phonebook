@@ -4,7 +4,7 @@
 		<div class="col-md-6" align="left">
 			<a href="#modalAddContact" data-toggle="modal" class="btn btn-success">Add Contact <span class="glyphicon glyphicon-plus"></span></a>
 			<a target="_blank" href="<?php echo site_url('contact/excel_listing'); ?>" class="btn btn-primary">Export To Excel <span class="glyphicon glyphicon-file"></span></a>
-			<a target="_blank" href="<?php echo site_url('contact/pdf_listing'); ?>" class="btn btn-danger">Export To PDF  <span class="glyphicon glyphicon-print"></span></a>
+		<a target="_blank" href="<?php echo site_url('contact/pdf_listing'); ?>" class="btn btn-danger">Export To PDF  <span class="glyphicon glyphicon-print"></span></a>
 		</div>
 		<form action="<?php echo site_url()?>/contact/search" method="POST">
 			<div class="col-md-5">
