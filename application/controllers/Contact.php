@@ -36,7 +36,7 @@ class Contact extends CI_Controller
 	{
 	    redirect('contact/listing');
 	}
-	asdasd
+	
 	public function listing()
 	{
 		$this->data["query"] = $this->contact_m->contact_listing($this->pag_config);
